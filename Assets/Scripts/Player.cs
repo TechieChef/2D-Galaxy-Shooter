@@ -20,14 +20,15 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
-    // for shield
     private bool _isShieldBoostActive = false;
-    // variable reference to the shield visualizer
     [SerializeField]
     private GameObject _shieldVisualizer;
     [SerializeField]
+    private GameObject _leftEngine; 
+    [SerializeField]
+    private GameObject _rightEngine;
+    [SerializeField]
     private int _score;
-    // handle for component
     private UIManager _uiManager;
 
     // Start is called before the first frame update
@@ -119,6 +120,17 @@ public class Player : MonoBehaviour
         _lives--;
         // call updatelives method
         _uiManager.UpdateLives(_lives);
+
+        // if lives = 2 enable left engine
+        if (_lives == 2)
+        {
+            _leftEngine.SetActive(true);
+        }
+        // if lives = 1 enable right  engine
+        else if (_lives == 1)
+        {
+            _rightEngine.SetActive(true);
+        }
 
         if (_lives <= 0)
         {
