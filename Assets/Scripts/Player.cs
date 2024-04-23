@@ -30,6 +30,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _score;
     private UIManager _uiManager;
+    // variable to store the audio clip
+    [SerializeField]
+    private AudioClip _laserSoundClip;
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -37,18 +41,28 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
        
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        // find the UIManager
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        // get audio source component - makes it more flexible in future
+        _audioSource = GetComponent<AudioSource>();
        
         if (_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is NULL.");
         }
 
-        // null check for UIManager
         if (_uiManager == null)
         {
             Debug.LogError("The UI Manager is NULL.");
+        }
+
+        // null check audio source and play sound if not null
+        if (_audioSource == null)
+        {
+            Debug.LogError("AudioSource on the Player is NULL.");
+        }
+        else
+        {
+            _audioSource.clip = _laserSoundClip;
         }
 
         // mitigate the annoying "variable is assigned but never used" warning
@@ -101,7 +115,10 @@ public class Player : MonoBehaviour
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
 
+        // play the laser audio clip
+        _audioSource.Play();
     }
+
 
     public void Damage()
     {

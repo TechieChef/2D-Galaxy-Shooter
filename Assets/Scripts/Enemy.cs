@@ -8,20 +8,22 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _speed = 4.0f;
     private Player _player;
-    // handle to animator component
     private Animator _anim;
+    // handler for audio source
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _audioSource = GetComponent<AudioSource>();
+
         if (_player == null)
             Debug.Log("Enemy could not find the player.");
 
-        // assign the component to Anim
+
         _anim = GetComponent<Animator>();
 
-        // null check the animator
         if (_anim == null)
         {
             Debug.LogError("The animator is NULL");
@@ -49,6 +51,8 @@ public class Enemy : MonoBehaviour
             // trigger anim
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
+            // play sound before destroying the object
+            _audioSource.Play();
             Destroy(this.gameObject, 2.8f);
         }
 
@@ -58,15 +62,13 @@ public class Enemy : MonoBehaviour
    
             if (_player != null)
             {
-                // Add random value beginning at 10 to score
-                // _player.AddScore(Random.Range(10, 50));
-                // Add 10 to score
                 _player.AddScore(10);
             }
 
-            // trigger anim
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
+            // play sound before destroying the object
+            _audioSource.Play();
             Destroy(this.gameObject, 2.8f);
         }
     }
