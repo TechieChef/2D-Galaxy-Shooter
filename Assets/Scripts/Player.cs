@@ -30,10 +30,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _score;
     private UIManager _uiManager;
-    // variable to store the audio clip
     [SerializeField]
     private AudioClip _laserSoundClip;
-    private AudioSource _audioSource;
+    private AudioSource _audioSource; 
 
     // Start is called before the first frame update
     void Start()
@@ -133,6 +132,8 @@ public class Player : MonoBehaviour
             _shieldVisualizer.SetActive(false);
             return;
         }
+
+        // if Enemy Laser hits Player, only take one life
     
         _lives--;
         // call updatelives method
