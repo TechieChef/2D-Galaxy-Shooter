@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
             FireLaser();
            
         }
+
     }
 
     void CalculateMovement()
@@ -87,7 +88,18 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        transform.Translate(direction * _speed * Time.deltaTime);
+
+        // increase speed when shift key is pressed
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            transform.Translate(direction * _speed * _speedMultiplier * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(direction * _speed * Time.deltaTime);
+        }
+
+       
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -157,7 +169,7 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        Debug.Log($"Lives: {_lives}");
+        // Debug.Log($"Lives: {_lives}");
     }
     
     public void TripleShotActive()

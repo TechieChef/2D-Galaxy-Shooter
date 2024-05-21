@@ -44,11 +44,30 @@ public class Enemy : MonoBehaviour
     {
         CalculateMovement();
 
+        EnemyFire();
+
+ 
+    }
+
+    void CalculateMovement()
+    {
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+        if (transform.position.y < -5.0f)
+        {
+            float randomX = Random.Range(-8.0f, 8.0f);
+            transform.position = new Vector3(randomX, 7, 0);
+        }
+    }
+
+    // refactor Enemy Fire code into own methood to improve hygiene
+    void EnemyFire()
+    {
         // check to see if Time.time is greater than -1 
         // This value is greater only if the game is actively running
         if (Time.time > _canFire && _isAlive == true)
         {
-            // set the firing rate range for a randome value between 3 and 7 seconds, float
+            // set the firing rate range for a random value between 3 and 7 seconds, float
             _fireRate = Random.Range(3.0f, 7.0f);
             // set up firing with time value
             _canFire = Time.time + _fireRate;
@@ -63,17 +82,6 @@ public class Enemy : MonoBehaviour
             {
                 lasers[i].AssignEnemyLaser();
             }
-        }
-    }
-
-    void CalculateMovement()
-    {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
-
-        if (transform.position.y < -5.0f)
-        {
-            float randomX = Random.Range(-8.0f, 8.0f);
-            transform.position = new Vector3(randomX, 7, 0);
         }
     }
 

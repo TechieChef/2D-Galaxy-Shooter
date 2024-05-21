@@ -1867,7 +1867,7 @@ MonoBehaviour:
   _enemyPrefab: {fileID: 1689438232507221305, guid: 360bd6ede9259be4b9b243ec58002810,
     type: 3}
   _enemyContainer: {fileID: 756976335}
-  powerups:
+  _powerups:
   - {fileID: 6651444646601258127, guid: 2eecc5be35365bf47a7e137bd25f9070, type: 3}
   - {fileID: 859122876398843780, guid: c4adaf5b747a7914cbdf2f17d93b8c3b, type: 3}
   - {fileID: 165777974372729532, guid: b5e6cd31d06dcd546ab0499aa050e528, type: 3}
