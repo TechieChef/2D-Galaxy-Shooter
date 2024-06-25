@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -23,6 +24,14 @@ public class Player : MonoBehaviour
     private bool _isShieldBoostActive = false;
     [SerializeField]
     private GameObject _shieldVisualizer;
+    // begin shield strength variables
+    [SerializeField]
+    private GameObject _shieldStrengthActive;
+    [SerializeField]
+    private TMP_Text _shieldStrengthTextActive;
+    [SerializeField]
+    private int _shieldStrength = 0;
+    // end shield strength variables
     [SerializeField]
     private GameObject _leftEngine; 
     [SerializeField]
@@ -38,12 +47,38 @@ public class Player : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
-       
+               
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
         // get audio source component - makes it more flexible in future
         _audioSource = GetComponent<AudioSource>();
+
+        // consolidate null checks within own method
+        DoNullChecks();
+
+        // mitigate the annoying "variable is assigned but never used" warning
+        _ = _isSpeedBoostActive == false;
        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        CalculateMovement();
+
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        {
+            FireLaser();
+           
+        }
+
+    }
+
+    private void DoNullChecks()
+    {
+
         if (_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is NULL.");
@@ -64,20 +99,10 @@ public class Player : MonoBehaviour
             _audioSource.clip = _laserSoundClip;
         }
 
-        // mitigate the annoying "variable is assigned but never used" warning
-        _ = _isSpeedBoostActive == false;
-       
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        CalculateMovement();
-
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        // null check shield strength
+        if (_shieldStrengthActive == null)
         {
-            FireLaser();
-           
+            Debug.LogError("Shield Strength Visual is NULL.");
         }
 
     }
@@ -98,8 +123,6 @@ public class Player : MonoBehaviour
         {
             transform.Translate(direction * _speed * Time.deltaTime);
         }
-
-       
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -130,48 +153,66 @@ public class Player : MonoBehaviour
         _audioSource.Play();
     }
 
-
     public void Damage()
     {
-        // if shields is active
-        // do nothing
-        // use return; keyword
-        // deactivate shields and resume damage
-        if(_isShieldBoostActive == true)
+        // if Enemy Laser hits Player AND Shields inactive, only take one life
+        if (_isShieldBoostActive == false)
+        {
+            _lives--;
+            // call updatelives method
+            _uiManager.UpdateLives(_lives);
+
+            // if lives = 2 enable left engine
+            if (_lives == 2)
+            {
+                _leftEngine.SetActive(true);
+            }
+            // if lives = 1 enable right engine
+            else if (_lives == 1)
+            {
+                _rightEngine.SetActive(true);
+            }
+
+            if (_lives <= 0)
+            {
+                _spawnManager.OnPlayerDeath();
+
+                Destroy(this.gameObject);
+            }
+        }
+        // Debug.Log($"Lives: {_lives}");
+        else
+        {
+            if (_shieldStrength > 0)
+            {
+
+                _shieldStrengthActive.SetActive(true);
+                _shieldStrength -= 1;
+                _shieldStrengthTextActive.text = _shieldStrength.ToString();
+
+                if (_shieldStrength == 0)
+                {
+                    ShieldDeactivate();
+                }
+
+            }
+        }
+    }
+
+
+    // deactivate shield strength visual
+    public void ShieldDeactivate()
+    {
+        if (_isShieldBoostActive == true)
         {
             _isShieldBoostActive = false;
-            // disable visualizer
+            _shieldStrengthActive.SetActive(false);
             _shieldVisualizer.SetActive(false);
-            return;
         }
 
-        // if Enemy Laser hits Player, only take one life
-    
-        _lives--;
-        // call updatelives method
-        _uiManager.UpdateLives(_lives);
-
-        // if lives = 2 enable left engine
-        if (_lives == 2)
-        {
-            _leftEngine.SetActive(true);
-        }
-        // if lives = 1 enable right  engine
-        else if (_lives == 1)
-        {
-            _rightEngine.SetActive(true);
-        }
-
-        if (_lives <= 0)
-        {
-            _spawnManager.OnPlayerDeath(); 
-
-            Destroy(this.gameObject);
-        }
-
-        // Debug.Log($"Lives: {_lives}");
     }
-    
+
+
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
@@ -199,10 +240,14 @@ public class Player : MonoBehaviour
     }
 
     public void ShieldBoostActive()
+    // remove if for resetting shield
     {
         _isShieldBoostActive = true;
-        // enable visualizer
+        _shieldStrengthActive.SetActive(true);
+        _shieldStrength = 3;
+        _shieldStrengthTextActive.text = _shieldStrength.ToString();
         _shieldVisualizer.SetActive(true);
+        
     }
 
     // method to add 10 to the score
