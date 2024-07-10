@@ -6,15 +6,16 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    // handle to text
     [SerializeField]
     private TMP_Text _scoreText;
-    // life counter image
     [SerializeField]
     private Image _LivesImg;
-    // life counter sprites
     [SerializeField]
     private Sprite[] _liveSprites;
+    // begin ammo count variables
+    [SerializeField]
+    private TMP_Text _ammoValueText;
+    // end ammo count variables
     // game over text
     [SerializeField]
     private TMP_Text _gameOverText;
@@ -43,6 +44,7 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("Game Manager is NULL.");
         }
+        
     }
 
     // method to update the score
@@ -64,6 +66,12 @@ public class UIManager : MonoBehaviour
             GameOverSequence();
         }
 
+    }
+
+    // method to update ammo count
+    public void UpdateAmmoCount(int ammoCount)
+    {
+        _ammoValueText.text = ammoCount.ToString();
     }
 
     public void GameOverSequence()

@@ -3,7 +3,18 @@ guid: 4ba4c02d23c33974d8c34962c753a30d
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _laserPrefab: {fileID: 4790713418292987858, guid: 3bcaf33bf127f8b4cbee7b282ede4f34,
+      type: 3}
+  - _tripleShotPrefab: {fileID: 5577396014698027684, guid: 3ad00769cd061604bbba95724ae3fdbe,
+      type: 3}
+  - _shieldVisualizer: {instanceID: 0}
+  - _shieldStrengthActive: {instanceID: 0}
+  - _shieldStrengthTextActive: {instanceID: 0}
+  - _shieldStrengthLabelActive: {instanceID: 0}
+  - _leftEngine: {instanceID: 0}
+  - _rightEngine: {instanceID: 0}
+  - _laserSoundClip: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

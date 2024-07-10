@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private TMP_Text _shieldStrengthTextActive;
     [SerializeField]
+    private TMP_Text _shieldStrengthLabelActive;
+    [SerializeField]
     private int _shieldStrength = 0;
     // end shield strength variables
     [SerializeField]
@@ -41,7 +43,13 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
     [SerializeField]
     private AudioClip _laserSoundClip;
-    private AudioSource _audioSource; 
+    private AudioSource _audioSource;
+    // begin ammo count variables
+    [SerializeField]
+    private TMP_Text _ammoValueText;
+    [SerializeField]
+    private int _ammoCount = 15;
+    // end ammo count variables
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +59,9 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
 
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        // establish ammo count text
+        _ammoValueText.text = _ammoCount.ToString();
 
         // get audio source component - makes it more flexible in future
         _audioSource = GetComponent<AudioSource>();
@@ -68,7 +79,8 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        // update to include ammo count is greater than 0
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _ammoCount > 0)
         {
             FireLaser();
            
@@ -151,6 +163,11 @@ public class Player : MonoBehaviour
 
         // play the laser audio clip
         _audioSource.Play();
+
+        // reduce ammo by 1
+        _ammoCount -= 1;
+        // communicate with UIManager to update ammo
+        _uiManager.UpdateAmmoCount(_ammoCount);
     }
 
     public void Damage()
@@ -189,6 +206,7 @@ public class Player : MonoBehaviour
                 _shieldStrengthActive.SetActive(true);
                 _shieldStrength -= 1;
                 _shieldStrengthTextActive.text = _shieldStrength.ToString();
+                _shieldStrengthLabelActive.enabled = true;
 
                 if (_shieldStrength == 0)
                 {
@@ -246,6 +264,7 @@ public class Player : MonoBehaviour
         _shieldStrengthActive.SetActive(true);
         _shieldStrength = 3;
         _shieldStrengthTextActive.text = _shieldStrength.ToString();
+        _shieldStrengthLabelActive.enabled = true;
         _shieldVisualizer.SetActive(true);
         
     }
