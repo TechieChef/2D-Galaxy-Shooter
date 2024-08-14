@@ -47,6 +47,10 @@ public class PowerUp : MonoBehaviour
                         // Debug.Log("Shields Up!");
                         player.ShieldBoostActive();
                         break;
+                    case 3: // Ammo
+                        // Debug.Log("Ammo Collected");
+                        player.AmmoCollected();
+                        break;
                     default: // Default value
                         Debug.Log("Default Value");
                         break;

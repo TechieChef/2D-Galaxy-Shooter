@@ -170,6 +170,30 @@ public class Player : MonoBehaviour
         _uiManager.UpdateAmmoCount(_ammoCount);
     }
 
+    // collect Ammo Powerup
+    public void AmmoCollected()
+    {
+        // add 10 to ammoCount
+        _ammoCount += 10;
+        AmmoCap();
+        // communicate with UImanager to update ammo
+        _uiManager.UpdateAmmoCount(_ammoCount);
+    }
+
+    // ammo cap to keep the game challenging
+    void AmmoCap()
+    {
+        if (_ammoCount <= 0)
+        {
+            _ammoCount = 0;
+        }
+        // limit ammo count to 100
+        else if (_ammoCount > 100)
+        {
+            _ammoCount = 100;
+        }
+    }
+
     public void Damage()
     {
         // if Enemy Laser hits Player AND Shields inactive, only take one life
