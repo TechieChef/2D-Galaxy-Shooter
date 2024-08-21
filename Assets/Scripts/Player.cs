@@ -16,8 +16,12 @@ public class Player : MonoBehaviour
     private float _fireRate = 0.15f;
     [SerializeField]
     private float _canFire = -1.0f;
+    // begin lives variables
     [SerializeField]
     private int _lives = 3;
+    [SerializeField]
+    private int _maxlives = 3; // defines maximum aount of lives for Player
+    // end lives variables
     private SpawnManager _spawnManager;
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
@@ -193,6 +197,29 @@ public class Player : MonoBehaviour
             _ammoCount = 100;
         }
     }
+
+    // collect health and add a life
+    public void AddHealth()
+    {
+        if (_lives < _maxlives)
+        {
+            _lives++;
+            // communicate with UIManager to update Lives
+            _uiManager.UpdateLives(_lives);
+
+        }
+
+        // ensure damage visuals are correct based on available lives
+        if (_lives == 3)
+        {
+            _leftEngine.SetActive(false);
+        }
+        else if (_lives == 2)
+        {
+            _rightEngine.SetActive(false);
+        }
+    }
+
 
     public void Damage()
     {
